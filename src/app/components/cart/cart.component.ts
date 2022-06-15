@@ -10,6 +10,7 @@ import { DataStoreService } from 'src/app/services/data-store.service';
 })
 export class CartComponent implements OnInit {
   cartItems$!: Observable<ProductData[]>;
+
   constructor(private dataStore: DataStoreService) { }
 
   ngOnInit(): void {
@@ -19,4 +20,5 @@ export class CartComponent implements OnInit {
   clearCart() {
     this.dataStore.clearCart();
   }
+
 }

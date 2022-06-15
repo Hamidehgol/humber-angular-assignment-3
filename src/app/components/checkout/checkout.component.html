@@ -1,0 +1,110 @@
+<style>
+  input[type = text] {
+     width: 10%;
+     padding: 5px 5px;
+     margin: 4px 0;
+     box-sizing: border-box;
+  }
+</style>
+<form [formGroup]="myForm" style="text-align:center" [formGroup]="myForm" (ngSubmit)="onSubmit(myForm.value)" > 
+
+<div>
+  <label for="firstname">firstname </label>
+  <input type="text" id="firstname" name="firstname" formControlName="firstname">
+</div>
+<div *ngIf="myForm.controls['firstname'].touched || myForm.controls['firstname'].dirty">
+  <div *ngIf="myForm.controls['firstname'].errors && myForm.controls['firstname'].errors['pattern']" 
+  [ngClass] = "'error'"> Please enter only alphabets(max:20 chars).
+  </div>
+  </div>
+<div>
+  <label for="lastname">Lastname </label>
+  <input type="text" id="lastname" name="lastname" formControlName="lastname">
+</div>
+<div *ngIf="myForm.controls['lastname'].touched || myForm.controls['lastname'].dirty">
+  <div *ngIf="myForm.controls['lastname'].errors && myForm.controls['lastname'].errors['pattern']" 
+  [ngClass] = "'error'"> Please enter only alphabets(max:20 chars).
+  </div>
+  </div>
+<div>
+  <label for="address">Address </label>
+  <input type="text" id="address" name="address" formControlName="address">
+</div>
+
+<div>
+  <label for="city">City </label>
+  <input type="text" id="city" name="city" formControlName="city">
+</div>
+
+<div *ngIf="myForm.get('postalcode')?.dirty && 
+myForm.errors?.['incorrectPostalCode']"> 
+  Incorrect PostalCode</div>
+  
+  <label for="postalcode">Postalcode </label>
+  <input type="text" id="postalcode" name="postalcode" formControlName="postalcode">
+
+<div>
+  <label for="country">Country </label>
+  <select id="country" name="country"  formControlName="country">
+   <option value="US" >US</option>
+   <option value="CANADA" >CANADA</option>
+ 
+  </select>
+</div>
+
+<div>
+    <label for="card">Card </label>
+    <select id="card" name="card"  formControlName="card">
+     <option value="VISA" >VISA</option>
+     <option value="MASTER" >MASTERCARD</option>
+   
+    </select>
+  </div>
+
+  <div>
+    <label for="cardnumber">Card number </label>
+    <input type="text" id="cardnumber" name="cardnumber" formControlName="cardnumber" placeholder="Maximom is 16 Digits"
+    appMydirective [maxChars] = 16 
+    [frmCtrl] = "myForm.get('cardnumber')">
+  </div>
+  <div *ngIf="myForm.controls['cardnumber'].touched || myForm.controls['cardnumber'].dirty">
+    <div *ngIf="myForm.controls['cardnumber'].errors && myForm.controls['cardnumber'].errors['pattern']" 
+    [ngClass] = "'error'"> Please enter the valid cardnumber
+    </div>
+    </div>
+
+  <div>
+    <label for="nameoncard">Holder name </label>
+    <input type="text" id="nameoncard" name="nameoncard" formControlName="nameoncard">
+  </div>
+
+<div>
+  <label for="expiry">Expir </label>
+  <input type="text" id="expiry" name="expiry" formControlName="expiry" placeholder="MM/YYYY"
+  appMydirective [maxChars] = 7  [frmCtrl] = "myForm.get('expiry')">
+</div>
+
+
+  <div>
+    <label >CVC 
+    <input type="text" formControlName="cvc" appMydirective [maxChars] = 4 placeholder="MAX : 4 DIGITS"
+    [frmCtrl] = "myForm.get('cvc')">
+    </label>
+  </div>
+
+  <div *ngIf="myForm.controls['cvc'].touched || myForm.controls['cvc'].dirty">
+  <div *ngIf="myForm.controls['cvc'].errors && myForm.controls['cvc'].errors['pattern']" 
+  [ngClass] = "'error'"> Please enter the valid CVC
+  </div>
+  </div>
+
+  <div><label>GRAND TOTAL:
+<input type="text" formControlName="grand_total" [ngModel]="calculateTotal()" >
+  </label></div>
+  <button mat-button  [disabled]="!myForm.valid">Submit</button>
+  <div>
+    {{myForm.valid}}
+    <p>myForm value: {{ myForm.value | json }}</p>
+  </div>
+
+</form>

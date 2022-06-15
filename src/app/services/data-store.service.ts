@@ -18,11 +18,13 @@ export class DataStoreService {
   private fullProductList!: ProductData[]
 
 
+
   constructor() { }
 
   setProducts(products: ProductData[]) {
     this._products.next(products);
   }
+
 
   setOrders(orders: OrderData[]) {
     this._orders.next(orders);
@@ -36,15 +38,15 @@ export class DataStoreService {
     this._cartItems.pipe(
       take(1)
     ).subscribe((cartItems: ProductData[]) => {
+
       cartItems.push(item);
       this._cartItems.next(cartItems);
     });
   }
 
+ 
   filterProducts(text: string) {
-    this._products.pipe(
-      take(1)
-    ).subscribe(products => {
+    this._products.pipe(take(1)).subscribe(products => {
       if (text === "") {
         this._products.next(this.fullProductList)
       } else {

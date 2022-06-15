@@ -10,10 +10,10 @@ import { DataStoreService } from 'src/app/services/data-store.service';
   styleUrls: ['./checkout.component.scss']
 })
 export class CheckoutComponent {
-  myForm!: FormGroup;
+  projectForm!: FormGroup;
   subscription!: Subscription;
   x : any;
-  Component1Data: any = '';
+  ComponentData: any = '';
   
   constructor(private fb: FormBuilder,private dataStore: DataStoreService) {
    
@@ -22,18 +22,17 @@ export class CheckoutComponent {
 }
 
 calculateTotal():number{
-  let rows = this.myForm.get('rows') as FormArray;
+  let rows = this.projectForm.get('rows') as FormArray;
   let gdTotal=0;
   
  return rows.controls.
-    map((row)=> gdTotal+ row.get('price')?.value). //calcualte each amount
-     reduce((sum,amount) => sum + amount,0); //find sum
-     
+    map((row)=> gdTotal+ row.get('price')?.value). 
+     reduce((sum,amount) => sum + amount,0); 
 }
 
 
   createForm() {
-   this.myForm = this.fb.group({
+   this.projectForm = this.fb.group({
     rows: this.fb.array([]),
     firstname:[null, [Validators.required, Validators.pattern("^[a-zA-Z]{1,20}$")]],
     lastname:[null, [Validators.required, Validators.pattern("^[a-zA-Z]{1,20}$")]],

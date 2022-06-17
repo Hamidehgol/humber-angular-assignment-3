@@ -1,61 +1,49 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormBuilder, NgForm, FormArray } from '@angular/forms'
-import { Observable, Subscription } from 'rxjs';
 import { ProductData } from 'src/app/models/product.interface';
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { filter, take } from 'rxjs';
 import { DataStoreService } from 'src/app/services/data-store.service';
+import { nameValidator, numberValidator } from 'src/app/Validators/valiadtors';
+import { AccountInfoComponent } from '../account-info/account-info.component';
 
 @Component({
   selector: 'checkout',
   templateUrl: './checkout.component.html',
   styleUrls: ['./checkout.component.scss']
 })
-export class CheckoutComponent {
-  projectForm!: FormGroup;
-  subscription!: Subscription;
-  x : any;
-  ComponentData: any = '';
+export class CheckoutComponent implements OnInit {
   
-  constructor(private fb: FormBuilder,private dataStore: DataStoreService) {
+  form!: FormGroup;
+
+  total=0;
+  constructor(private route: ActivatedRoute, private dataStore: DataStoreService,  private router: Router) { }
+
+  ngOnInit(): void {
+
+    this.form = new FormGroup({
+      firstName: new FormControl('', [Validators.required, nameValidator()]),
+      lastName: new FormControl('', [Validators.required, nameValidator()]),
+      address: new FormControl('', [Validators.required]),
+      city: new FormControl('', [Validators.required]),
+      postalCode: new FormControl('', [Validators.required]),
+      country: new FormControl('', [Validators.required]),
+      card: new FormControl('', [Validators.required]),
+      creditCardNo: new FormControl('', [Validators.required, numberValidator, Validators.pattern(/^-?(0|[1-9]\d*)?$/)]),
+      expiry: new FormControl('', [Validators.required]),
+      cvc: new FormControl('', [Validators.required, numberValidator, Validators.pattern(/^-?(0|[1-9]\d*)?$/)]),
+      nameOnCard: new FormControl('', [Validators.required])
+
+    })
+
+  
+  }
+
+  submit(confirm:string):void  {
+    console.log(this.form.value);
+    this.router.navigate([`${AccountInfoComponent}`]);
    
-   this.createForm();
-
-}
-
-calculateTotal():number{
-  let rows = this.projectForm.get('rows') as FormArray;
-  let gdTotal=0;
-  
- return rows.controls.
-    map((row)=> gdTotal+ row.get('price')?.value). 
-     reduce((sum,amount) => sum + amount,0); 
-}
-
-
-  createForm() {
-   this.projectForm = this.fb.group({
-    rows: this.fb.array([]),
-    firstname:[null, [Validators.required, Validators.pattern("^[a-zA-Z]{1,20}$")]],
-    lastname:[null, [Validators.required, Validators.pattern("^[a-zA-Z]{1,20}$")]],
-    address:[],
-    city:[null, [Validators.required, Validators.pattern("^[a-zA-Z]{1,20}$")]],
-    postalcode:[],
-    country:[null, [Validators.required, Validators.pattern("^[a-zA-Z]{1,20}$")]],
-    card:[],
-    cardnumber:[null, [Validators.required, Validators.pattern("^[0-9]{1,16}$")]],
-    nameoncard:[],
-    expiry:[],
-      cvc: [null, [Validators.required, Validators.pattern("^[0-9]{1,4}$")]],
-      grand_total:[]
-   });
- }
-
-
-onSubmit(form: NgForm) {
-  this.subscription =  this.dataStore.cartItems$.subscribe(x=>console.log(x));
-  console.log(form);
+  }
  
-}
-ngOnDestroy(): void {
-  this.subscription.unsubscribe();
-}
+
 }

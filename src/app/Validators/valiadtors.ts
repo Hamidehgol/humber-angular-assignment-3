@@ -1,23 +1,31 @@
-import { AbstractControl,ValidationErrors,ValidatorFn} from "@angular/forms"
+import { AbstractControl, ValidationErrors, ValidatorFn } from "@angular/forms";
 
-export function customValidator():ValidatorFn
-{
-    return (control:AbstractControl ): ValidationErrors | null =>{
-            const isPostalCodeCorrectCAN = control.get('postalcode')?.value.match(/[A-Z]\d[A-Z]\s\d[A-Z]\d/g);
-            const isPostalCodeCorrectUS = control.get('postalcode')?.value.match(/\d\d\d\d\d/g);
-           
-            if(control.get('country')?.value=== 'US' && !isPostalCodeCorrectUS)
-            {
-            return {incorrectPostalCode : true};
 
-            } else if(control.get('country')?.value=== 'CANADA' && !isPostalCodeCorrectCAN ) {
-                return {incorrectPostalCode : true};  
-            }else if(control.get('country')?.value=== null && !isPostalCodeCorrectCAN)
-            {
-                return {incorrectPostalCode : true};   
-            }
+export function nameValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+        
+        const Numbers = control.value.match(/\d/g);
+        if (Numbers) {
+            return { WrongNumbers: true };
+        } else if (control.value.includes(" ")) {
+            return { spaces: true }
+        } else if (!control.value) {
+            return { empty: true }
+        }
 
-          
-           
-         return null;}
+        return null; 
+    };
 }
+
+export function numberValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+        const Character = control.value.match(/^-?(0|[1-9]\d*)?$/);
+        if (Character) {
+            return { WrongCharacters: true };
+        }else if (!control.value) {
+            return { empty: true }
+        }
+        return null;
+    };
+}
+
